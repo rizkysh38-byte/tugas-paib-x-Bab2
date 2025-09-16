@@ -29,10 +29,10 @@
     }
     .btn.active {
       cursor: pointer;
-      background: green;
+      background: navy;
     }
     h2, h3 { color: #333; }
-    iframe { border: black; }
+    iframe { border: blue; }
   </style>
 </head>
 <body>
@@ -89,6 +89,16 @@
     let btnSelesai = document.getElementById("btnSelesai");
     let readingStatus = document.getElementById("readingStatus");
     let videoTimerDisplay = document.getElementById("videoTimer");
+
+    // Deteksi scroll container PDF
+    const pdfContainer = document.getElementById("pdfContainer");
+    pdfContainer.addEventListener("scroll", () => {
+      if (pdfContainer.scrollTop + pdfContainer.clientHeight >= pdfContainer.scrollHeight - 5) {
+        readingDone = true;
+        readingStatus.textContent = "Status: Membaca selesai ✅";
+        cekSelesai();
+      }
+    });
 
     // Deteksi scroll container PDF
     const pdfContainer = document.getElementById("pdfContainer");

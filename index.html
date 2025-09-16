@@ -2,132 +2,122 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Tugas PAIB: Syu'abul Iman</title>
+  <title>Materi Belajar</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
-      line-height: 1.6;
-      background: green;
+      margin: 20px
+      background: blue;
     }
-    .box {
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      background: white;
+    .container {
+      margin-bottom: 20px;
     }
-    .btn {
-      padding: 12px 24px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
+    iframe {
+      width: 100%;
+      height: 400px;
+      border: 1px solid darkblue;
+    }
+    #btnSelesai {
+      padding: 10px 20px;
       font-size: 16px;
+      border: none;
+      background: gray;
+      color: white;
       cursor: not-allowed;
-      transition: 0.3s;
+      border-radius: 6px;
     }
-    .btn.active {
+    #btnSelesai.active {
+      background: darkblue;
       cursor: pointer;
-      background: navy;
     }
-    h2, h3 { color: #333; }
-    iframe { border: blue; }
+    .status {
+      margin: 10px 0;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <h2>Tugas PAIB: Syu'abul Iman</h2>
-
-  <!-- Bagian membaca PDF dari Google Drive -->
-  <div class="box">
-    <h3>Bacalah Ulang Materi Minggu Kemarin pada PDF Berikut (scroll dan baca sampai akhir, setelah membaca lanjutkan materi bacaan kedua):</h3>
-    <div id="pdfContainer" style="width:100%; height:800px; overflow-y:scroll; border:2px solid #ccc;">
-      <!-- Ganti ID_GOOGLE_DRIVE dengan ID file PDF -->
-      <iframe src="https://drive.google.com/file/d/1bg6p1kqUIQkAYH0HjvGAbE11RQDRoHfZ/preview" width="100%" height="800"></iframe>
-    </div>
-    <p id="readingStatus">Status: Belum selesai membaca ❌</p>
+  <h2>📖 Materi Bacaan</h2>
+  
+  <!-- Bacaan PDF 1 -->
+  <div class="container">
+    <h3>Bacaan 1 (Mohon untuk dibaca ulang materi kemarin)scroll sampai habis membaca</h3>
+    <iframe id="pdf1" src="https://drive.google.com/file/d/1bg6p1kqUIQkAYH0HjvGAbE11RQDRoHfZ/preview"></iframe>
+    <div id="statusPdf1" class="status">Status: Belum selesai</div>
   </div>
 
-  <!-- Bagian membaca PDF dari Google Drive -->
-  <div class="box">
-    <h3>Bacalah Materi Cabang Iman pada PDF Berikut (scroll dan baca sampai akhir, setelah membaca lanjutkan menonton video):</h3>
-    <div id="pdfContainer" style="width:100%; height:800px; overflow-y:scroll; border:2px solid #ccc;">
-      <!-- Ganti ID_GOOGLE_DRIVE dengan ID file PDF -->
-      <iframe src="https://drive.google.com/file/d/1gNpOnwAQHWJuUN-MMr_aZ6EwUpR0U3Ol/preview" width="100%" height="800"></iframe>
-    </div>
-    <p id="readingStatus">Status: Belum selesai membaca ❌</p>
-  </div>
-  <!-- Bagian video YouTube -->
-  <div class="box">
-    <h3>Tonton Ulang Video Berikut:</h3>
-    <iframe id="materiVideo"
-      src="https://www.youtube.com/embed/aypspFSMIq8?enablejsapi=1&controls=0"
-      width="100%" height="400"
-      title="Video YouTube"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen></iframe>
-    <p><i>Video tidak bisa di-skip, wajib ditonton sampai selesai, setelah selesai tekan tombol klik untuk selesai.</i></p>
+  <!-- Bacaan PDF 2 -->
+  <div class="container">
+    <h3>Bacaan 2</h3>
+    <iframe id="pdf2" src="https://drive.google.com/file/d/1gNpOnwAQHWJuUN-MMr_aZ6EwUpR0U3Ol/preview"></iframe>
+    <div id="statusPdf2" class="status">Status: Belum selesai</div>
   </div>
 
-  <!-- Timer video -->
-  <div class="box">
-    <h3>Waktu Menonton Video</h3>
-    <p id="videoTimer">Durasi: belum mulai</p>
+  <!-- Video YouTube -->
+  <div class="container">
+    <h3>🎬 Materi Video</h3>
+    <h3>Tonton Video Sampai Waktu Habis, tidak bisa dipercepat.setelah waktu habis maka tombol selesai akan menyala, kemudian klik selesai untuk mengerjakan tugas</h3>
+    <div id="materiVideo"></div>
+    <div id="videoTimer" class="status">Status: Belum selesai</div>
   </div>
 
   <!-- Tombol selesai -->
-  <button id="btnSelesai" class="btn" disabled>Selesai</button>
+  <button id="btnSelesai" disabled>Selesai</button>
 
   <script>
-    let readingDone = false;
+    let pdf1Done = false;
+    let pdf2Done = false;
     let videoDone = false;
     let videoDuration = 0;
     let player;
     let lastTime = 0;
 
     let btnSelesai = document.getElementById("btnSelesai");
-    let readingStatus = document.getElementById("readingStatus");
+    let statusPdf1 = document.getElementById("statusPdf1");
+    let statusPdf2 = document.getElementById("statusPdf2");
     let videoTimerDisplay = document.getElementById("videoTimer");
 
-    // Deteksi scroll container PDF
-    const pdfContainer = document.getElementById("pdfContainer");
-    pdfContainer.addEventListener("scroll", () => {
-      if (pdfContainer.scrollTop + pdfContainer.clientHeight >= pdfContainer.scrollHeight - 5) {
-        readingDone = true;
-        readingStatus.textContent = "Status: Membaca selesai ✅";
-        cekSelesai();
-      }
-    });
-
-    // Deteksi scroll container PDF
-    const pdfContainer = document.getElementById("pdfContainer");
-    pdfContainer.addEventListener("scroll", () => {
-      if (pdfContainer.scrollTop + pdfContainer.clientHeight >= pdfContainer.scrollHeight - 5) {
-        readingDone = true;
-        readingStatus.textContent = "Status: Membaca selesai ✅";
-        cekSelesai();
-      }
-    });
-
+    // Fungsi cek selesai
     function cekSelesai() {
-      if (readingDone && videoDone) {
+      if (pdf1Done && pdf2Done && videoDone) {
         btnSelesai.disabled = false;
         btnSelesai.classList.add("active");
         btnSelesai.textContent = "Klik untuk Selesai";
       }
     }
 
-    // YouTube API
+    // Simulasi scroll PDF (iframe drive tidak bisa dideteksi scroll langsung)
+    // Jadi kita pakai timer sebagai simulasi "membaca minimal durasi"
+    setTimeout(() => {
+      pdf1Done = true;
+      statusPdf1.textContent = "Status: Bacaan 1 selesai ✅";
+      cekSelesai();
+    }, 10000); // 10 detik simulasi baca PDF 1
+
+    setTimeout(() => {
+      pdf2Done = true;
+      statusPdf2.textContent = "Status: Bacaan 2 selesai ✅";
+      cekSelesai();
+    }, 15000); // 15 detik simulasi baca PDF 2
+
+    // Load YouTube API
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    // YouTube API siap
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('materiVideo', {
+        height: '360',
+        width: '640',
+        videoId: 'oeMbwRc0ccI', // Ganti dengan ID video
         events: {
           'onReady': function(event) {
             videoDuration = Math.floor(player.getDuration());
           },
           'onStateChange': function(event) {
             if (event.data == YT.PlayerState.PLAYING) {
-              setInterval(() => {
+              let timer = setInterval(() => {
                 let currentTime = Math.floor(player.getCurrentTime());
 
                 // deteksi skip
@@ -137,6 +127,7 @@
                   lastTime = currentTime;
                 }
 
+                // tampilkan sisa waktu
                 let remaining = videoDuration - currentTime;
                 let minutes = Math.floor(remaining / 60);
                 let seconds = remaining % 60;
@@ -146,6 +137,7 @@
                   videoDone = true;
                   videoTimerDisplay.textContent = "Video selesai ✅";
                   cekSelesai();
+                  clearInterval(timer);
                 }
               }, 1000);
             }
@@ -154,14 +146,9 @@
       });
     }
 
-    // Load YouTube API
-    let tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-
     // Redirect setelah selesai
     btnSelesai.addEventListener("click", function() {
-      window.location.href = "https://www.educaplay.com/learning-resources/25387731-game_cabang_iman_bab_2.html"; // ganti dengan link Google Form
+      window.location.href = "https://www.educaplay.com/learning-resources/25387731-game_cabang_iman_bab_2.html"; // ganti dengan link tugas (Google Form atau lainnya)
     });
   </script>
 </body>
